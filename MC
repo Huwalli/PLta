@@ -1,0 +1,176 @@
+#define FORWARD  1
+
+#define BACKWARD 2
+
+#define BRAKE    3
+
+#define RELEASE  4
+
+#define Pin2     2
+#define Pin13    13
+#define Pin9     9
+#define Pin10    10
+ 
+
+ 
+
+void setup() {
+//每秒位元數9600
+    Serial.begin(9600);
+    
+    pinMode (Pin2,  INPUT);
+    pinMode (Pin13,  INPUT);
+    pinMode (Pin9,  INPUT);
+    pinMode (Pin10,  INPUT);
+ 
+
+}
+//'f'前進
+//'b'後退
+//'l'左平移
+//'r'右平移
+//'x'順時鐘
+//'y'逆時針
+//'1'左上平移
+//'2'左下平移
+//'3'右上平移
+//'4'右下平移
+//'w'停止
+
+ 
+
+void loop() {
+
+    char key = 0;// 存ASCII code
+    int a,b,c,d;
+    int fg;
+    fg=0;
+
+    if ( Serial.available() ) { //如果有收到
+
+       key = Serial.read(); //讀入字元到key;
+       fg=1;
+
+    }
+
+    // 善待您的馬達，180度反轉向時請讓馬達稍微休眠一下
+
+    motor2_A(1, RELEASE, 0);
+    motor1_A(2, RELEASE, 0); 
+    motor1_B(3, RELEASE, 0);
+    motor2_B(4, RELEASE, 0);
+   
+
+    delay(1000);
+
+    a=1;
+    b=1;
+    c=1;
+    d=1;
+
+    a=digitalRead(Pin2);
+    a=digitalRead(Pin13);
+    a=digitalRead(Pin9); 
+    key='w';
+  }
+  if(a==1 and b==1 and c==1 and d==1){
+    key='key';
+  }
+}
+
+ //不會的分隔線
+    switch ( key ) {
+
+        case 'f': // 前進
+//
+            motor(1, BACKWARD, 250); //LU  
+            motor(2, BACKWARD, 250);  //LD
+            motor(3, FORWARD, 250);  //RU
+            motor(4, FORWARD, 250); //RD
+
+
+            delay(5000);
+
+            break;
+
+        case 'b': // 後退
+            motor(3, BACKWARD, 250); //RU  
+            motor(4, BACKWARD, 250);  //RD
+            motor(1, FORWARD, 250);  //LU
+            motor(2, FORWARD, 250); //LD
+            
+            delay(5000);
+
+            break;
+    case 'r': // 右平移
+        motor(3, BACKWARD, 250); // RU
+        motor(4, FORWARD, 250);  // RD
+        motor(1, BACKWARD, 250); // LU
+        motor(2, FORWARD, 250);  // LD
+        delay(5000);
+        break;
+
+    case 'l': // 左平移
+        motor(3, FORWARD, 250);  // RU
+        motor(4, BACKWARD, 250); // RD
+        motor(1, FORWARD, 250);  // LU
+        motor(2, BACKWARD, 250); // LD
+        delay(5000);
+        break;
+
+    case 'y': // 逆時針旋轉
+        motor(3, FORWARD, 250);  // RU
+        motor(4, FORWARD, 250);  // RD
+        motor(1, FORWARD, 250);  // LU
+        motor(2, FORWARD, 250);  // LD
+        delay(5000);
+        break;
+
+    case 'x': // 順時針旋轉
+        motor(3, BACKWARD, 250); // RU
+        motor(4, BACKWARD, 250); // RD
+        motor(1, BACKWARD, 250); // LU
+        motor(2, BACKWARD, 250); // LD
+        delay(5000);
+        break;
+
+    case '4': // 右下平移
+        motor(3, BACKWARD, 250); // RU
+        motor(2, FORWARD, 250);  // LD
+        delay(5000);
+        break;
+
+    case '3': // 右上平移
+        motor(1, BACKWARD, 250); // LU
+        motor(4, FORWARD, 250);  // RD
+        delay(5000);
+        break;
+
+    case '1': // 左上平移
+        motor(2, BACKWARD, 250); // LD
+        motor(3, FORWARD, 250);  // RU
+        delay(5000);
+        break;
+
+    case '2': // 左下平移
+        motor(1, FORWARD, 250);  // LU
+        motor(4, BACKWARD, 250); // RD
+        delay(5000);
+        break;
+
+    case 'w': // 停止
+        motor(1, STOP, 0);
+        motor(2, STOP, 0);
+        motor(3, STOP, 0);
+        motor(4, STOP, 0);
+        break;    
+     
+        case 'r': //上述不成立
+
+        default:
+
+            break;
+
+    }
+
+}
